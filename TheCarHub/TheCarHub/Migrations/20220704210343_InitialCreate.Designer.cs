@@ -9,7 +9,7 @@ using TheCarHub.Data;
 
 namespace TheCarHub.Migrations
 {
-    [DbContext(typeof(CarHubContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20220704210343_InitialCreate")]
     partial class InitialCreate
     {
