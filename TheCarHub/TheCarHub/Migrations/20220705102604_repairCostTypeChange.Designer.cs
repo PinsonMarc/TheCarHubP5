@@ -10,8 +10,8 @@ using TheCarHub.Data;
 namespace TheCarHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220704210714_changePurchasePriceType")]
-    partial class changePurchasePriceType
+    [Migration("20220705102604_repairCostTypeChange")]
+    partial class repairCostTypeChange
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,8 +41,8 @@ namespace TheCarHub.Migrations
                     b.Property<decimal>("PurchasePrice")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<string>("RepairCost")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("RepairCost")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Repairs")
                         .HasColumnType("nvarchar(max)");

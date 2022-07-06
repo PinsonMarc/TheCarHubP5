@@ -16,7 +16,9 @@ namespace TheCarHub.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal PurchasePrice { get; set; }
         public string Repairs { get; set; }
-        public string RepairCost { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal RepairCost { get; set; }
         public DateTime LotDate { get; set; }
         public DateTime? SaleDate { get; set; }
     }
