@@ -9,7 +9,7 @@ namespace TheCarHub.Models
     public class Car
     {
         [BindNever]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [StringLength(100)]
         public string VIN { get; set; }
@@ -17,11 +17,11 @@ namespace TheCarHub.Models
         [Range(1990, 2050)]
         public int Year { get; set; }
 
-        [StringLength(50)]
-        public string Make { get; set; }
+        public Make Make { get; set; }
+        public int? MakeId { get; set; }
 
-        [StringLength(50)]
-        public string Model { get; set; }
+        public Model Model { get; set; }
+        public int? ModelId { get; set; }
 
         [StringLength(10)]
         public string Trim { get; set; }

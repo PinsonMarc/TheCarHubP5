@@ -26,7 +26,7 @@ namespace TheCarHub.Controllers
         }
 
         // GET: Admin/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -56,7 +56,6 @@ namespace TheCarHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,VIN,Year,Make,Model,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] Car car)
         {
-            car.Id = Guid.NewGuid().ToString(); ;
             if (ModelState.IsValid)
             {
                 _context.Add(car);
@@ -67,7 +66,7 @@ namespace TheCarHub.Controllers
         }
 
         // GET: Admin/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -87,11 +86,11 @@ namespace TheCarHub.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,VIN,Year,Make,Model,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,VIN,Year,Make,Model,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] Car car)
         {
             if (id != car.Id)
             {
-                return NotFound();
+                car.Id = id;
             }
 
             if (ModelState.IsValid)
@@ -118,7 +117,7 @@ namespace TheCarHub.Controllers
         }
 
         // GET: Admin/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -138,7 +137,7 @@ namespace TheCarHub.Controllers
         // POST: Admin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = await _context.Cars.FindAsync(id);
             _context.Cars.Remove(car);
@@ -146,7 +145,7 @@ namespace TheCarHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarExists(string id)
+        private bool CarExists(int id)
         {
             return _context.Cars.Any(e => e.Id == id);
         }
