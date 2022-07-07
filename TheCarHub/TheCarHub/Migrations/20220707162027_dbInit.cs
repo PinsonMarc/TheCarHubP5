@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TheCarHub.Migrations
 {
-    public partial class identity : Migration
+    public partial class dbInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,19 @@ namespace TheCarHub.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Makes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Makes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +165,62 @@ namespace TheCarHub.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Models",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
+                    MakeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Models", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Models_Makes_MakeId",
+                        column: x => x.MakeId,
+                        principalTable: "Makes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cars",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VIN = table.Column<string>(maxLength: 100, nullable: true),
+                    Year = table.Column<int>(nullable: false),
+                    MakeId = table.Column<int>(nullable: true),
+                    ModelId = table.Column<int>(nullable: true),
+                    Trim = table.Column<string>(maxLength: 10, nullable: true),
+                    PurchaseDate = table.Column<DateTime>(nullable: false),
+                    PurchasePrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    Repairs = table.Column<string>(nullable: true),
+                    RepairCost = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    LotDate = table.Column<DateTime>(nullable: false),
+                    SaleDate = table.Column<DateTime>(nullable: true),
+                    Status = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cars", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cars_Makes_MakeId",
+                        column: x => x.MakeId,
+                        principalTable: "Makes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Cars_Models_ModelId",
+                        column: x => x.ModelId,
+                        principalTable: "Models",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -190,6 +259,21 @@ namespace TheCarHub.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cars_MakeId",
+                table: "Cars",
+                column: "MakeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cars_ModelId",
+                table: "Cars",
+                column: "ModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Models_MakeId",
+                table: "Models",
+                column: "MakeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -210,10 +294,19 @@ namespace TheCarHub.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Cars");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Models");
+
+            migrationBuilder.DropTable(
+                name: "Makes");
         }
     }
 }
