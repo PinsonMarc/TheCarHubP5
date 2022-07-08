@@ -7,7 +7,9 @@
 <h1>Car list</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Car</a>
+    <a asp-action="Create" asp-controller="Makes" method="post">&nbsp; Create New Make</a>
+    <a asp-action="CreateModel" asp-controller="Makes" method="post">&nbsp; Create New Model</a>
 </p>
 <table class="table">
     <thead>

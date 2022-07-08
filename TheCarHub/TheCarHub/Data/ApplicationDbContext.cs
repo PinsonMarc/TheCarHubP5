@@ -17,6 +17,7 @@ namespace TheCarHub.Data
         public DbSet<Car> Cars { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Make> Makes { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

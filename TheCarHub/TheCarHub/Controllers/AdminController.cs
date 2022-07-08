@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +17,12 @@ namespace TheCarHub.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public AdminController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AdminController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+
+            _webHostEnvironment = hostEnvironment;
         }
 
         // GET: Admin
@@ -114,6 +120,45 @@ namespace TheCarHub.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(car);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewImage(int id, IFormFile image)
+        {
+            if (ModelState.IsValid)
+            {
+                string uniqueFileName = UploadedFile(image);
+
+                Image createdImage = new Image
+                {
+                    CarId = id,
+                    FileName = uniqueFileName
+                };
+                _context.Images.Add(createdImage);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        private string UploadedFile(IFormFile image)
+        {
+            string uniqueFileName = null;
+
+            if (image != null)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    image.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
 
         // GET: Admin/Delete/5
