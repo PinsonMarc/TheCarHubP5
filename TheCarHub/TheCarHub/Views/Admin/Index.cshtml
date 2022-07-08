@@ -8,8 +8,10 @@
 
 <p>
     <a asp-action="Create">Create New Car</a>
-    <a asp-action="Create" asp-controller="Makes" method="post">&nbsp; Create New Make</a>
-    <a asp-action="CreateModel" asp-controller="Makes" method="post">&nbsp; Create New Model</a>
+    <span>&nbsp;</span>
+    <a asp-action="Create" asp-controller="Makes" method="post">Create New Make</a>
+    <span>&nbsp;</span>
+    <a asp-action="CreateModel" asp-controller="Makes" method="post">Create New Model</a>
 </p>
 <table class="table">
     <thead>
@@ -63,10 +65,10 @@
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Make)
+                @Html.DisplayFor(modelItem => item.Make.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Model)
+                @Html.DisplayFor(modelItem => item.Model.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Trim)

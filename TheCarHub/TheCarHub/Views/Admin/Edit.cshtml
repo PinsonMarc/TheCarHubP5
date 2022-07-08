@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Edit car";
+    SelectList makes = (SelectList)ViewData["Makes"];   
+    SelectList models = (SelectList)ViewData["Models"];   
 }
 
 <h1>Edit car</h1>
@@ -25,12 +27,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Make" class="control-label"></label>
-                <input asp-for="Make" class="form-control" />
-                <span asp-validation-for="Make" class="text-danger"></span>
+                <select asp-for="MakeId" asp-items="@makes" class="form-control"></select>
+                <span asp-validation-for="MakeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Model" class="control-label"></label>
-                <input asp-for="Model" class="form-control" />
+                <select asp-for="ModelId" asp-items="@models" class="form-control"></select>
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -70,7 +72,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status"  asp-items="Html.GetEnumSelectList<Status>()" class="form-control"></select>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
