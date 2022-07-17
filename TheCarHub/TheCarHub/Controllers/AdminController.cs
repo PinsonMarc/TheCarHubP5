@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,7 @@ namespace TheCarHub.Controllers
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cars.Include(c => c.Make).Include(c => c.Model).ToListAsync());
+            return View(await _context.Cars.Include(c => c.Model).ThenInclude(m => m.Make).ToListAsync());
         }
 
         // GET: Admin/Details/5
@@ -54,7 +55,6 @@ namespace TheCarHub.Controllers
         public IActionResult Create()
         {
             ViewData["Makes"]  = new SelectList(_context.Makes.ToList(), "Id", "Name");
-            ViewData["Models"] = new SelectList(_context.Models.ToList(), "Id", "Name");
 
             return View();
         }
@@ -68,7 +68,7 @@ namespace TheCarHub.Controllers
         {
             if (ModelState.IsValid)
             {
-                car.Make = await _context.Makes.FindAsync(car.MakeId);
+                //car.Make = await _context.Makes.FindAsync(car.MakeId);
                 _context.Add(car);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -84,14 +84,14 @@ namespace TheCarHub.Controllers
                 return NotFound();
             }
 
-            var car = await _context.Cars.Include(c => c.Make).Include(c => c.Model).Where(x => x.Id == id).FirstOrDefaultAsync();
+            var car = await _context.Cars.Include(c => c.Model).ThenInclude(m => m.Make).FirstOrDefaultAsync();
             if (car == null)
             {
                 return NotFound();
             }
 
-            ViewData["Makes"] = new SelectList(_context.Makes.ToList(), "Id", "Name", car.Make);
-            ViewData["Models"]= new SelectList(_context.Models.ToList(), "Id", "Name", car.Model);
+            ViewData["Makes"] = new SelectList (_context.Makes.ToList(), "Id", "Name", car.Model.Make);
+            ViewData["Models"] = new SelectList(_context.Models.Where(m => m.MakeId == car.Model.MakeId).ToList(), "Id", "Name", car.Model);
             return View(car);
         }
 
@@ -178,14 +178,24 @@ namespace TheCarHub.Controllers
                 return NotFound();
             }
 
-            var car = await _context.Cars
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var car = await _context.Cars.FirstOrDefaultAsync(m => m.Id == id);
             if (car == null)
             {
                 return NotFound();
             }
 
             return View(car);
+        }
+
+        public async Task<JsonResult> GetModels(int? id)
+        {
+            if (id == null)
+            {
+                return new JsonResult(BadRequest());
+            }
+            var models = await _context.Models.Where(m => m.MakeId == id).ToListAsync();
+
+            return new JsonResult(Ok(JsonSerializer.Serialize(models)));
         }
 
         // POST: Admin/Delete/5

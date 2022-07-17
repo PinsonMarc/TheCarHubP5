@@ -23,7 +23,7 @@
                 @Html.DisplayNameFor(model => model.Year)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Make)
+                @Html.DisplayNameFor(model => model.Model.Make)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Model)
@@ -65,7 +65,7 @@
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Make.Name)
+                @Html.DisplayFor(modelItem => item.Model.Make.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Model.Name)
