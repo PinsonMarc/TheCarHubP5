@@ -20,6 +20,7 @@ namespace TheCarHub.Models
 
         [Required]
         public int MakeId { get; set; }
+
         public Make Make { get; set; }
     }
 }
