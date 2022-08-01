@@ -64,16 +64,33 @@ namespace TheCarHub.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VIN,Year,MakeId,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] Car car)
+        public async Task<IActionResult> Create([Bind("Id,ImageFiles,VIN,Year,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] CarViewModel carViewModel)
         {
             if (ModelState.IsValid)
             {
-                //car.Make = await _context.Makes.FindAsync(car.MakeId);
+                var images = await NewImages(carViewModel.Id, carViewModel.ImageFiles);
+
+                Car car = new Car
+                {
+                    Id = carViewModel.Id,
+                    VIN = carViewModel.VIN,
+                    Year = carViewModel.Year,
+                    ModelId = carViewModel.ModelId,
+                    Trim = carViewModel.Trim,
+                    PurchaseDate = carViewModel.PurchaseDate,
+                    PurchasePrice = carViewModel.PurchasePrice,
+                    Repairs = carViewModel.Repairs,
+                    RepairCost = carViewModel.RepairCost,
+                    LotDate = carViewModel.LotDate,
+                    SaleDate = carViewModel.SaleDate,
+                    Status = carViewModel.Status,
+                    Images = images
+                };
                 _context.Add(car);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(car);
+            return View(carViewModel);
         }
 
         // GET: Admin/Edit/5
@@ -100,13 +117,12 @@ namespace TheCarHub.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VIN,Year,MakeId,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,VIN,Year,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] Car car)
         {
             if (id != car.Id)
             {
                 car.Id = id;
             }
-
 
             if (ModelState.IsValid)
             {
@@ -131,13 +147,12 @@ namespace TheCarHub.Controllers
             return View(car);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> NewImage(int id, IFormFile image)
+        private async Task<List<Image>> NewImages(int id, List<IFormFile> images)
         {
-            if (ModelState.IsValid)
+            var createdImages = new List<Image>(images.Count);
+            for (int i = 0; i < images.Count; i++)
             {
-                string uniqueFileName = UploadedFile(image);
+                string uniqueFileName = UploadFile(images[i]);
 
                 Image createdImage = new Image
                 {
@@ -147,24 +162,25 @@ namespace TheCarHub.Controllers
                 _context.Images.Add(createdImage);
                 await _context.SaveChangesAsync();
 
-                return Ok();
+                createdImages.Add(createdImage);
             }
 
-            return NotFound();
+            return createdImages;
         }
 
-        private string UploadedFile(IFormFile image)
+        private string UploadFile(IFormFile file)
         {
             string uniqueFileName = null;
 
-            if (image != null)
+            if (file != null)
             {
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    image.CopyTo(fileStream);
+                    file.CopyTo(fileStream);
                 }
             }
             return uniqueFileName;

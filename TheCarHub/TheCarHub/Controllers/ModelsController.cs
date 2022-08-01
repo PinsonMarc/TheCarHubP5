@@ -73,10 +73,5 @@ namespace TheCarHub.Controllers
             await _context.SaveChangesAsync();
             return Redirect("/Admin");
         }
-
-        private bool ModelExists(int id)
-        {
-            return _context.Models.Any(e => e.Id == id);
-        }
     }
 }
