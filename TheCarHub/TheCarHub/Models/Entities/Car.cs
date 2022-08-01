@@ -29,13 +29,13 @@ namespace TheCarHub.Models
         [DataType(DataType.Date)]
         public DateTime PurchaseDate { get; set; }
 
-        [DisplayName("Purchase Price ($)")]
+        [DisplayName("Purchase Price")]
         [Column(TypeName = "decimal(18, 2)")]
         [DataType(DataType.Currency)]
         public decimal PurchasePrice { get; set; }
         public string Repairs { get; set; }
 
-        [DisplayName("Repair Cost ($)")]
+        [DisplayName("Repair Cost")]
         [Column(TypeName = "decimal(18, 2)")]
         [DataType(DataType.Currency)]
         public decimal RepairCost { get; set; }

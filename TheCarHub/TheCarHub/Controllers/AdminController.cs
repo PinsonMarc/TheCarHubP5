@@ -42,7 +42,10 @@ namespace TheCarHub.Controllers
             }
 
             var car = await _context.Cars
+                .Include(c => c.Model).ThenInclude(m => m.Make)
+                .Include(c => c.Images)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (car == null)
             {
                 return NotFound();
@@ -68,11 +71,10 @@ namespace TheCarHub.Controllers
         {
             if (ModelState.IsValid)
             {
-                var images = await NewImages(carViewModel.Id, carViewModel.ImageFiles);
+                var images = await NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
 
                 Car car = new Car
                 {
-                    Id = carViewModel.Id,
                     VIN = carViewModel.VIN,
                     Year = carViewModel.Year,
                     ModelId = carViewModel.ModelId,
