@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,12 +20,13 @@ namespace TheCarHub.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public AdminController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
+        public AdminController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, IMapper mapper)
         {
             _context = context;
             _webHostEnvironment = hostEnvironment;
+            _mapper = mapper;
         }
 
         // GET: Admin
@@ -63,8 +65,6 @@ namespace TheCarHub.Controllers
         }
 
         // POST: Admin/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ImageFiles,VIN,Year,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] CarViewModel carViewModel)
@@ -73,21 +73,8 @@ namespace TheCarHub.Controllers
             {
                 var images = await NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
 
-                Car car = new Car
-                {
-                    VIN = carViewModel.VIN,
-                    Year = carViewModel.Year,
-                    ModelId = carViewModel.ModelId,
-                    Trim = carViewModel.Trim,
-                    PurchaseDate = carViewModel.PurchaseDate,
-                    PurchasePrice = carViewModel.PurchasePrice,
-                    Repairs = carViewModel.Repairs,
-                    RepairCost = carViewModel.RepairCost,
-                    LotDate = carViewModel.LotDate,
-                    SaleDate = carViewModel.SaleDate,
-                    Status = carViewModel.Status,
-                    Images = images
-                };
+                Car car = _mapper.Map<CarViewModel, Car>(carViewModel);
+
                 _context.Add(car);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -115,8 +102,6 @@ namespace TheCarHub.Controllers
         }
 
         // POST: Admin/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,VIN,Year,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] Car car)
@@ -187,6 +172,7 @@ namespace TheCarHub.Controllers
             }
             return uniqueFileName;
         }
+
 
         // GET: Admin/Delete/5
         public async Task<IActionResult> Delete(int? id)
