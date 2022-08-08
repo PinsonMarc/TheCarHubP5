@@ -65,7 +65,7 @@ namespace TheCarHub.Controllers
             return View(make);
         }
 
-        // POST: Makes/Delete/5
+        // post: Makes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
