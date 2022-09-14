@@ -147,10 +147,10 @@ namespace TheCarHub.Controllers
                     FileName = uniqueFileName
                 };
                 _context.Images.Add(createdImage);
-                await _context.SaveChangesAsync();
 
                 createdImages.Add(createdImage);
             }
+            await _context.SaveChangesAsync();
 
             return createdImages;
         }
@@ -158,12 +158,10 @@ namespace TheCarHub.Controllers
         private string UploadFile(IFormFile file)
         {
             string uniqueFileName = null;
-
             if (file != null)
             {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                string filePath = GetFullPath(uniqueFileName);
 
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
@@ -171,6 +169,18 @@ namespace TheCarHub.Controllers
                 }
             }
             return uniqueFileName;
+        }
+
+        private void DeleteFile(string fileName)
+        {
+            string filePath = GetFullPath(fileName);
+            if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
+        }
+
+        private string GetFullPath(string fileName)
+        {
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+            return Path.Combine(uploadsFolder, fileName);
         }
 
 
@@ -207,8 +217,16 @@ namespace TheCarHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var car = await _context.Cars.FindAsync(id);
+            var car = await _context.Cars.Include(c => c.Images).Where(c => c.Id == id).FirstAsync();
+
+            foreach (Image image in car.Images)
+            {
+                _context.Images.Remove(image);
+                DeleteFile(image.FileName);
+            }
+
             _context.Cars.Remove(car);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
