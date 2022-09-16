@@ -48,6 +48,7 @@ namespace TheCarHub.Models
         [DataType(DataType.Date)]
         public DateTime? SaleDate { get; set; }
 
+        [AllowedExtensions(new string[] { ".jpg", ".png" })]
         public List<Image> Images { get; set; }
         public Status Status { get; set; }
     }
