@@ -60,6 +60,7 @@ namespace TheCarHub.Models
         public List<IFormFile> ImageFiles { get; set; }
     }
 
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class AllowedExtensionsAttribute : ValidationAttribute
     {
         private readonly string[] _extensions;
@@ -68,15 +69,17 @@ namespace TheCarHub.Models
             _extensions = extensions;
         }
 
-        protected override ValidationResult IsValid(
-        object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (value is IFormFile file)
+            if (value is List<IFormFile> files)
             {
-                var extension = Path.GetExtension(file.FileName);
-                if (!_extensions.Contains(extension.ToLower()))
+                foreach (IFormFile file in files)
                 {
-                    return new ValidationResult(GetErrorMessage());
+                    var extension = Path.GetExtension(file.FileName);
+                    if (!_extensions.Contains(extension.ToLower()))
+                    {
+                        return new ValidationResult(GetErrorMessage());
+                    }
                 }
             }
 
