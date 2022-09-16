@@ -27,7 +27,6 @@
 </ItemGroup>
 
 <ItemGroup>
-  <Folder Include="Services\FileManager\" />
   <Folder Include="wwwroot\images\" />
 </ItemGroup>
 

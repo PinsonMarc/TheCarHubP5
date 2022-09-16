@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TheCarHub.Data;
 using TheCarHub.Models;
+using TheCarHub.Services.FileManager;
 
 namespace TheCarHub.Controllers
 {
@@ -21,12 +17,12 @@ namespace TheCarHub.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public AdminController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, IMapper mapper)
+        private readonly IFileManager _fileManager;
+        public AdminController(ApplicationDbContext context, IMapper mapper, IFileManager fileManager)
         {
             _context = context;
-            _webHostEnvironment = hostEnvironment;
             _mapper = mapper;
+            _fileManager = fileManager;
         }
 
         // GET: Admin
@@ -65,7 +61,7 @@ namespace TheCarHub.Controllers
         {
             if (ModelState.IsValid)
             {
-                var images = await NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
+                var images = await _fileManager.NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
 
                 Car car = _mapper.Map<CarViewModel, Car>(carViewModel);
                 car.Images = images;
@@ -103,7 +99,7 @@ namespace TheCarHub.Controllers
                 try
                 {
                     Car car = _mapper.Map<CarViewModel, Car>(carViewModel);
-                    var images = await NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
+                    var images = await _fileManager.NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
                     _context.Update(car);
                     await _context.SaveChangesAsync();
                 }
@@ -116,57 +112,6 @@ namespace TheCarHub.Controllers
             }
             return View(carViewModel);
         }
-
-        private async Task<List<Image>> NewImages(int id, List<IFormFile> images)
-        {
-            if (images == null) return null;
-            var createdImages = new List<Image>(images.Count);
-            for (int i = 0; i < images.Count; i++)
-            {
-                string uniqueFileName = UploadFile(images[i]);
-
-                Image createdImage = new Image
-                {
-                    CarId = id,
-                    FileName = uniqueFileName
-                };
-                _context.Images.Add(createdImage);
-
-                createdImages.Add(createdImage);
-            }
-            await _context.SaveChangesAsync();
-
-            return createdImages;
-        }
-
-        private string UploadFile(IFormFile file)
-        {
-            string uniqueFileName = null;
-            if (file != null)
-            {
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = GetFullPath(uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-            }
-            return uniqueFileName;
-        }
-
-        private void DeleteFile(string fileName)
-        {
-            string filePath = GetFullPath(fileName);
-            if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
-        }
-
-        private string GetFullPath(string fileName)
-        {
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-            return Path.Combine(uploadsFolder, fileName);
-        }
-
 
         // GET: Admin/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -198,7 +143,7 @@ namespace TheCarHub.Controllers
             foreach (Image image in car.Images)
             {
                 _context.Images.Remove(image);
-                DeleteFile(image.FileName);
+                _fileManager.DeleteFile(image.FileName);
             }
 
             _context.Cars.Remove(car);
