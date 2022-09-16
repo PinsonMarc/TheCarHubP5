@@ -138,7 +138,7 @@ namespace TheCarHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var car = await _context.Cars.Include(c => c.Images).Where(c => c.Id == id).FirstAsync();
+            var car = await _context.Cars.Include(c => c.Images).FirstOrDefaultAsync(c => c.Id == id);
 
             foreach (Image image in car.Images)
             {

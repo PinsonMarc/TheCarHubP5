@@ -33,7 +33,7 @@ namespace TheCarHub
                 options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"))
             .AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddSingleton<IFileManager, FileManager>();
+            services.AddScoped<IFileManager, FileManager>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
