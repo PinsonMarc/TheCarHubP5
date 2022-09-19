@@ -98,12 +98,19 @@ namespace TheCarHub.Controllers
             {
                 try
                 {
-                    Car car = _mapper.Map<CarViewModel, Car>(carViewModel);
-                    
                     //update images
-                    _fileManager.RemoveImages(carViewModel.Images.Where(i => !i.Selected).ToList());
-                    var images = await _fileManager.NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
+                    var images = await _fileManager.NewImages(id, carViewModel.ImageFiles);
+                    if (carViewModel.Images != null)
+                    {
+                        var toRemove = carViewModel.Images.Where(i => i.Selected).ToList();
+                        _fileManager.RemoveImages(toRemove);
+                        _context.Images.RemoveRange(toRemove);
+                        //concurrency debug
+                        carViewModel.Images.RemoveAll(i => i.Selected);
+                    }
 
+                    Car car = _mapper.Map<CarViewModel, Car>(carViewModel);
+                    //car.Images = images;
                     _context.Update(car);
                     await _context.SaveChangesAsync();
                 }
@@ -143,7 +150,7 @@ namespace TheCarHub.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = await _context.Cars.Include(c => c.Images).FirstOrDefaultAsync(c => c.Id == id);
-
+            _fileManager.RemoveImages(car.Images);
             _context.Cars.Remove(car);
 
             await _context.SaveChangesAsync();
