@@ -1,15 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
 	<TargetFramework>netcoreapp3.1</TargetFramework>
+	<SignAssembly>false</SignAssembly>
+	<Authors>MarcPinson</Authors>
+	<Company>MarcPinson</Company>
+	<ApplicationIcon>wwwroot\flavicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\images\419b5e64-6e92-4095-acb1-821f625073a0_car1.jpg" />
+	<Content Remove="wwwroot\images\419b5e64-6e92-4095-acb1-821f625073a0_car1.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
+	<None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
 <ItemGroup>

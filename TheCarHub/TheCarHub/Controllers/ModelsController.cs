@@ -39,7 +39,7 @@ namespace TheCarHub.Controllers
             {
                 _context.Add(model);
                 await _context.SaveChangesAsync();
-                return Redirect("/Admin");
+                return LocalRedirect("/Admin");
             }
             ViewData["MakeId"] = new SelectList(_context.Makes, "Id", "Name", model.MakeId);
 
@@ -73,7 +73,7 @@ namespace TheCarHub.Controllers
             var model = await _context.Models.FindAsync(id);
             _context.Models.Remove(model);
             await _context.SaveChangesAsync();
-            return Redirect("/Admin");
+            return LocalRedirect("/Admin");
         }
     }
 }
