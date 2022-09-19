@@ -1,10 +1,60 @@
-﻿@{
+﻿@model IEnumerable<TheCarHub.Models.Car>
+
+@{
     ViewData["Title"] = "Home Page";
     ViewData["UserPage"] = true;
-                    
+
 }
 
-<div class="text-center">
-    @*<h1 class="display-4">Welcome</h1>*@
-    @* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-</div>
+<h1>Car list</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Model.Make)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Images)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LotDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.Make.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @foreach (var image in item.Images)
+                    {
+                        <img src=~/images/@image.FileName alt="car picture" class="car-pic">
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LotDate)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
