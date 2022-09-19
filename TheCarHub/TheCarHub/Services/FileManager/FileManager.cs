@@ -6,9 +6,11 @@ using TheCarHub.Models;
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheCarHub.Services.FileManager
 {
+    [Authorize]
     public class FileManager : IFileManager
     {
         private readonly ApplicationDbContext _context;
