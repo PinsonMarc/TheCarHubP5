@@ -6,7 +6,6 @@ namespace TheCarHub.Data
 {
     public class DbInitialization
     {
-
         private const string AdminUser = "Admin";
         private const string AdminPassword = "Pass@word1";
 

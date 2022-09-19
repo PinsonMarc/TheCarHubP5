@@ -44,7 +44,7 @@ namespace TheCarHub.Controllers
             {
                 _context.Add(make);
                 await _context.SaveChangesAsync();
-                return Redirect("/Admin");
+                return LocalRedirect("/Admin");
             }
             return View(make);
         }
@@ -75,7 +75,7 @@ namespace TheCarHub.Controllers
             var make = await _context.Makes.FindAsync(id);
             _context.Makes.Remove(make);
             await _context.SaveChangesAsync();
-            return Redirect("/Admin");
+            return LocalRedirect("/Admin");
         }
     }
 }

@@ -37,7 +37,7 @@ namespace TheCarHub.Controllers
                     await _signInManager.SignOutAsync();
                     if ((await _signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
                     {
-                        return Redirect("/Admin");
+                        return LocalRedirect("/Admin");
                     }
                 }
             }
