@@ -78,7 +78,7 @@ namespace TheCarHub.Controllers
         {
             if (id == null) return NotFound();
 
-            var car = await _context.Cars.Where(c => c.Id == id).Include(c => c.Model).ThenInclude(m => m.Make).FirstOrDefaultAsync();
+            var car = await _context.Cars.Where(c => c.Id == id).Include(c => c.Model).ThenInclude(m => m.Make).Include(c => c.Images).FirstOrDefaultAsync();
             if (car == null) return NotFound();
 
             ViewData["Makes"] = new SelectList (_context.Makes.ToList(), "Id", "Name", car.Model.Make);
@@ -90,7 +90,7 @@ namespace TheCarHub.Controllers
         // POST: Admin/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ImageFiles,VIN,Year,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] CarViewModel carViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ImageFiles, Images,VIN,Year,ModelId,Trim,PurchaseDate,PurchasePrice,Repairs,RepairCost,LotDate,SaleDate,Status")] CarViewModel carViewModel)
         {
             if (id != carViewModel.Id) carViewModel.Id = id;
 
@@ -99,7 +99,11 @@ namespace TheCarHub.Controllers
                 try
                 {
                     Car car = _mapper.Map<CarViewModel, Car>(carViewModel);
+                    
+                    //update images
+                    _fileManager.RemoveImages(carViewModel.Images.Where(i => !i.Selected).ToList());
                     var images = await _fileManager.NewImages(_context.Cars.Max(c => c.Id), carViewModel.ImageFiles);
+
                     _context.Update(car);
                     await _context.SaveChangesAsync();
                 }
@@ -139,12 +143,6 @@ namespace TheCarHub.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = await _context.Cars.Include(c => c.Images).FirstOrDefaultAsync(c => c.Id == id);
-
-            foreach (Image image in car.Images)
-            {
-                _context.Images.Remove(image);
-                _fileManager.DeleteFile(image.FileName);
-            }
 
             _context.Cars.Remove(car);
 

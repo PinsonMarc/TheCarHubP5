@@ -86,10 +86,10 @@
             @Html.DisplayNameFor(model => model.Images)
         </dt>
         <dd class="col-sm-10">
-            @foreach (var item in Model.Images)
-             {
+            @foreach (var image in Model.Images)
+            {
                 <div class="display-field">
-                    <img src="~/images/@item.FileName" alt="car picture" height="100" />
+                    <img src="~/images/@image.FileName" alt="car picture" height="100" />
                 </div>
              }
         </dd>

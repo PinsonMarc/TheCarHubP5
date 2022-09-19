@@ -12,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" method="post"  enctype="multipart/form-data">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -76,10 +76,29 @@
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageFiles" class="control-label"></label>
+                <label asp-for="ImageFiles" class="control-label">Add images</label>
                 <input asp-for="ImageFiles" type="file" class="form-control" multiple />
                 <span asp-validation-for="ImageFiles" class="text-danger"></span>
             </div>
+           @if (Model.Images.Count > 0)
+            {
+            <div class="form-group">
+                <label>Remove images</label>
+                        @*<input id="@image.Id" type="checkbox" name= "Image" checked="@image.Selected" />*@
+                        @*<input asp-for="@image.Selected" type="checkbox" class="form-control" />*@
+                    @*<label asp-for="@Model.Images[i].Selected">@Model.Images[i].Category_name</label>*@
+                @for (int i = 0; i < Model.Images.Count(); i++)
+                {
+                    <div class="form-group">
+                        <img src="~/images/@Model.Images[i].FileName" alt="car picture" height="100" />
+                        <input type="hidden" asp-for="@Model.Images[i].Id"  class="form-control"/>
+                        <input type="hidden" asp-for="@Model.Images[i].FileName"  class="form-control"/>
+                        <input type="checkbox" asp-for="@Model.Images[i].Selected"  />
+                        <br />
+                    </div>
+                }
+            </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

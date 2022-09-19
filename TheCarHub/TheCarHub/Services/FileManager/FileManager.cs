@@ -20,13 +20,14 @@ namespace TheCarHub.Services.FileManager
             _hostEnvironment = hostEnvironment;
         }
 
-        public async Task<List<Image>> NewImages(int id, List<IFormFile> images)
+        public async Task<List<Image>> NewImages(int id, ICollection<IFormFile> images)
         {
             if (images == null) return null;
             var createdImages = new List<Image>(images.Count);
-            for (int i = 0; i < images.Count; i++)
+            //for (int i = 0; i < images.Count; i++)
+            foreach (var image in images)
             {
-                string uniqueFileName = UploadFile(images[i]);
+                string uniqueFileName = UploadFile(image);
 
                 Image createdImage = new Image
                 {
@@ -42,10 +43,22 @@ namespace TheCarHub.Services.FileManager
             return createdImages;
         }
 
-        public void DeleteFile(string fileName)
+        public async void RemoveImages(ICollection<Image> images)
+        {
+            if (images == null) return;
+            foreach (Image image in images)
+            {
+                _context.Images.Remove(image);
+                DeleteFile(image.FileName);
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        private void DeleteFile(string fileName)
         {
             string filePath = GetFullPath(fileName);
             if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
+
         }
 
         private string UploadFile(IFormFile file)
