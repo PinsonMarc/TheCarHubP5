@@ -28,7 +28,11 @@ namespace TheCarHub.Controllers
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cars.Include(c => c.Model).ThenInclude(m => m.Make).ToListAsync());
+            var cars = await _context.Cars
+                .Include(c => c.Model).ThenInclude(m => m.Make)
+                .OrderBy(c => c.Status)
+                .ToListAsync();
+            return View(cars);
         }
 
         // GET: Admin/Details/5
