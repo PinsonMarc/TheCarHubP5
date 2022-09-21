@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using TheCarHub.Data;
 using TheCarHub.Models;
 using TheCarHub.Services.FileManager;
@@ -53,7 +53,7 @@ namespace TheCarHub.Controllers
         // GET: Admin/Create
         public IActionResult Create()
         {
-            ViewData["Makes"]  = new SelectList(_context.Makes.ToList(), "Id", "Name");
+            ViewData["Makes"] = new SelectList(_context.Makes.ToList(), "Id", "Name");
 
             return View();
         }
@@ -85,7 +85,7 @@ namespace TheCarHub.Controllers
             var car = await _context.Cars.Where(c => c.Id == id).Include(c => c.Model).ThenInclude(m => m.Make).Include(c => c.Images).FirstOrDefaultAsync();
             if (car == null) return NotFound();
 
-            ViewData["Makes"] = new SelectList (_context.Makes.ToList(), "Id", "Name", car.Model.Make);
+            ViewData["Makes"] = new SelectList(_context.Makes.ToList(), "Id", "Name", car.Model.Make);
             ViewData["Models"] = new SelectList(_context.Models.Where(m => m.MakeId == car.Model.MakeId).ToList(), "Id", "Name", car.Model);
             CarViewModel carViewModel = _mapper.Map<Car, CarViewModel>(car);
             return View(carViewModel);
@@ -162,6 +162,6 @@ namespace TheCarHub.Controllers
         }
 
         private bool CarExists(int id)
-            =>  _context.Cars.Any(e => e.Id == id);
+            => _context.Cars.Any(e => e.Id == id);
     }
 }

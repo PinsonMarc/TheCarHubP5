@@ -21,7 +21,7 @@ namespace TheCarHub.Models
         public int Year { get; set; }
 
         public Model Model { get; set; }
-        
+
         public int? ModelId { get; set; }
 
         [StringLength(10)]

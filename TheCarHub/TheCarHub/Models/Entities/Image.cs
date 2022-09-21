@@ -6,9 +6,9 @@ namespace TheCarHub.Models
     {
         public int? Id { get; set; }
         [NotMapped]
-        public bool Selected { get; set; }        
+        public bool Selected { get; set; }
         public string FileName { get; set; }
-        
+
         public int CarId { get; set; }
         public Car Car { get; set; }
     }
