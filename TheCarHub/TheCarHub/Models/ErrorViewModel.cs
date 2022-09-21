@@ -1,5 +1,3 @@
-using System;
-
 namespace TheCarHub.Models
 {
     public class ErrorViewModel
