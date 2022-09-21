@@ -3,12 +3,12 @@
 @{
     ViewData["Title"] = "Home Page";
     ViewData["UserPage"] = true;
-
+    var maxImage = Model.Max(c => c.Images.Count);
 }
 
 <h1>Car list</h1>
 
-<table class="table">
+<table class="table user-table">
     <thead>
         <tr>
             <th>
@@ -21,40 +21,47 @@
                 @Html.DisplayNameFor(model => model.Year)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Images)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.LotDate)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.SellPrice)
+            </th>
+            @for (int i = 0; i < maxImage; i++)
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+       @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model.Make.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
-                    @foreach (var image in item.Images)
-                    {
-                        <img src=~/images/@image.FileName alt="car picture" class="car-pic">
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LotDate)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                </td>
-            </tr>
+        <tr>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Model.Make.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LotDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SellPrice)
+            </td>
+       @for (int i = 0; i < maxImage; i++)
+        {
+            <td>
+                @if (@i < item.Images.Count)
+                {
+                    <img src=~/images/@item.Images[i].FileName alt="car picture" class="car-pic">
+                }
+            </td>
+        }
+        </tr>
         }
     </tbody>
 </table>

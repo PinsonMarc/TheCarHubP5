@@ -9,6 +9,8 @@ namespace TheCarHub.Models
 {
     public class Car
     {
+        const decimal AdditionalPriceValue = 500;
+
         [BindNever]
         public int Id { get; set; }
 
@@ -51,6 +53,12 @@ namespace TheCarHub.Models
         [AllowedExtensions(new string[] { ".jpg", ".png" })]
         public List<Image> Images { get; set; }
         public Status Status { get; set; }
+
+        [DisplayName("Price")]
+        [NotMapped]
+        [Column(TypeName = "decimal(18, 2)")]
+        [DataType(DataType.Currency)]
+        public decimal SellPrice => RepairCost + PurchasePrice + AdditionalPriceValue;
     }
 
     public enum Status
