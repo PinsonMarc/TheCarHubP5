@@ -18,13 +18,15 @@ a {
   border-color: #1861ac;
 }
 
-td {
-    height: 1em;
+.user-table td {
+    height: 5em;
+    vertical-align: middle;
+    padding: 10px;
 }
 
 .car-pic {
-    border-radius: 20%;
-    height: 1em;
+    border-radius: 10%;
+    height: 5em;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -36,11 +38,11 @@ td {
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+  font-size: 10px;
 }
 @media (min-width: 768px) {
   html {
-    font-size: 16px;
+    font-size: 12px;
   }
 }
 
