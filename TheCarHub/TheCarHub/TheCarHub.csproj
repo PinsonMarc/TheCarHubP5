@@ -6,6 +6,7 @@
 	<Authors>MarcPinson</Authors>
 	<Company>MarcPinson</Company>
 	<ApplicationIcon>wwwroot\flavicon.ico</ApplicationIcon>
+	<UserSecretsId>9a91cbc9-af2c-46b4-bc67-39bd0a68bccf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,16 +23,23 @@
 
 <ItemGroup>
 	<PackageReference Include="AutoMapper" Version="11.0.1" />
-	<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.26" />
-	<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+	<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.26">
+	  <TreatAsUsed>true</TreatAsUsed>
+	</PackageReference>
+	<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0">
+	  <TreatAsUsed>true</TreatAsUsed>
+	</PackageReference>
 	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.26" />
 	<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.26" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.25" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.25">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  <TreatAsUsed>true</TreatAsUsed>
 	</PackageReference>
-	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5">
+	  <TreatAsUsed>true</TreatAsUsed>
+	</PackageReference>
 </ItemGroup>
 
 <ItemGroup>
