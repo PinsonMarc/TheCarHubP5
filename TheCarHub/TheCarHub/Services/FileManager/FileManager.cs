@@ -10,6 +10,7 @@ using TheCarHub.Models;
 
 namespace TheCarHub.Services.FileManager
 {
+    //Manage file inside the application
     [Authorize]
     public class FileManager : IFileManager
     {

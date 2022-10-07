@@ -10,10 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Properties\Resources.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
 	<Content Remove="wwwroot\images\419b5e64-6e92-4095-acb1-821f625073a0_car1.jpg" />
   </ItemGroup>
 
@@ -44,13 +40,6 @@
 
 <ItemGroup>
   <Folder Include="wwwroot\images\" />
-</ItemGroup>
-
-<ItemGroup>
-  <EmbeddedResource Update="Properties\Resources.resx">
-    <Generator>ResXFileCodeGenerator</Generator>
-    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-  </EmbeddedResource>
 </ItemGroup>
 
 </Project>

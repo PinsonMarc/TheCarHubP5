@@ -60,6 +60,7 @@ namespace TheCarHub.Models
         public List<IFormFile> ImageFiles { get; set; }
     }
 
+    //custom validation attribute
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class AllowedExtensionsAttribute : ValidationAttribute
     {

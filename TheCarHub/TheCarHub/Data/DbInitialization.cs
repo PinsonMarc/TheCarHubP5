@@ -8,7 +8,8 @@ namespace TheCarHub.Data
     {
         private const string AdminUser = "Admin";
         private const string AdminPassword = "Pass@word1";
-
+        
+        //Create a profile for administrator if none
         public static async void EnsurePopulated(IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())

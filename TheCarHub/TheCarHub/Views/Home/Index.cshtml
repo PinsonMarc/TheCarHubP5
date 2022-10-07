@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Home Page";
     ViewData["UserPage"] = true;
+    //Allow sizing depending on the max images 
     var maxImage = Model.Max(c => c.Images.Count);
 }
 
@@ -55,9 +56,9 @@
         {
             <td>
                 @if (@i < item.Images.Count)
-                {
+                 {
                     <img src=~/images/@item.Images[i].FileName alt="car picture" class="car-pic">
-                }
+                 }
             </td>
         }
         </tr>
