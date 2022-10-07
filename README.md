@@ -10,5 +10,5 @@ A simple website for a car seller, with admin monitoring
 - build the solution
 
 to login, use : 
- -Name     => Admin
- -Password => Pass@word1
+ - Name     => Admin
+ - Password => Pass@word1
